@@ -1,0 +1,100 @@
+--Create a Database Query for Online Phone Shope Disaplay
+
+-- Create a database named - Online_Phone_Shope
+create database Online_Phone_Shope;
+
+-- To use the database and enter a data into it
+use Online_Phone_Shope;
+
+-- Create a Schema for Manufacturer - 
+create schema Manufacturer;
+
+-- Create table named Phone_Manufaturer - That contains ID, Companeis Name
+Create table Manufacturer.Phone_Manufacturer(
+Manufacturer_ID int not null primary key identity(1,1),
+Image_ image,
+Manufacturer_Name nvarchar(50),
+Created_By nvarchar(10),
+Create_Time date,
+Updated_By nvarchar(10),
+Update_Time  date,
+IsActive bit,
+)
+
+select * from Manufacturer.Phone_Manufacturer;
+
+-- insert  a data into Phone_Manufacturer table.
+insert into Manufacturer.Phone_Manufacturer(Manufacturer_Name,Created_By,Create_Time,IsActive)
+values('Sony','Alex0130',getdate(),1);
+
+
+-- Create a Schema for Display -
+create schema Phone_Display;
+
+-- Create table named Phone_Details -  That contains ID, Phone Image, Model Name, Price, Total stock, rating, etc
+Create table Phone_Display.Phone_Details(
+Display_ID int not null primary key identity(1,1),
+Model_Name nvarchar(20),
+Phone_Image image,
+Manufacturer_ID int foreign key (Manufacturer_ID) references Manufacturer.Phone_Manufacturer(Manufacturer_ID),
+Price_$ int,
+Stock int,
+Rating float,
+Created_By nvarchar(10),
+Create_Time date,
+Updated_By nvarchar(10),
+Update_Time  date,
+IsActive bit,
+);
+
+Select * from Phone_Display.Phone_Details;
+
+-- insert  a data into Phone_Manufacturer table.
+insert into Phone_Display.Phone_Details(Model_Name, Manufacturer_ID, Price_$,Stock,Rating,Created_By,Create_Time,IsActive)
+values('iphone 14',2, 1320,250,4.7,'Alex0130',GETDATE(),1);
+
+--update Phone_Display.Phone_Details set Stock = 80 where Display_ID =2;
+
+-- Create another table that contain all details of Models
+
+Create table Phone_Display.Details(
+Detail_ID int not null primary key identity(1,1),
+Display_ID int foreign key (Display_ID) references Phone_Display.Phone_Details(Display_ID),
+Color nvarchar(15),
+Screen_size float,
+Storage_GB int,
+Ram_GB int,
+Charger_Type nvarchar(15),
+HandsFree varchar(5),
+System_Version nvarchar(20),
+Wifi nvarchar(10),
+Bluetooth nvarchar(10),
+Camera_MP int,
+Battery_MAH int,
+Created_By nvarchar(10),
+Create_Time date,
+Updated_By nvarchar(10),
+Update_Time  date,
+IsActive bit,
+)
+
+select * from Manufacturer.Phone_Manufacturer;
+select * from Phone_Display.Details;
+select * from Phone_Display.Phone_Details;
+
+insert into Phone_Display.Details(Display_ID, Color,Screen_size,Storage_GB,Ram_GB,Charger_Type,HandsFree,System_Version,Wifi,Bluetooth,Camera_MP,Battery_MAH,Created_By,Create_Time,IsActive)
+values(2,'Blue',6.2,64,4,'Adaptor','Yes','Andriod 10','Yes','Yes',13,3800,'Alex0130',GETDATE(),1)
+
+
+-- To check all details of our database
+
+select Manufacturer_Name from Manufacturer.Phone_Manufacturer;
+select Model_Name,Price_$,Stock, Rating from Phone_Display.Phone_Details;
+select * from Phone_Display.Details;
+
+
+select distinct Manufacturer.Phone_Manufacturer.Manufacturer_Name,  Phone_Display.Phone_Details.Model_Name,Phone_Display.Phone_Details.Rating, Phone_Display.Details.Color,
+Phone_Display.Details.Screen_size,Phone_Display.Details.Storage_GB,Phone_Display.Details.Ram_GB,Phone_Display.Details.Battery_MAH, Phone_Display.Details.Camera_MP, Phone_Display.Phone_Details.Price_$
+from Manufacturer.Phone_Manufacturer 
+inner join Phone_Display.Phone_Details on Manufacturer.Phone_Manufacturer.Manufacturer_ID = Phone_Display.Phone_Details.Manufacturer_ID
+inner join Phone_Display.Details on Phone_Display.Details.Display_ID = Phone_Display.Phone_Details.Display_ID;
